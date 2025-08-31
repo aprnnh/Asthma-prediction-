@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asthma Prediction System - Data Exploration</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-lungs fa-2x"></i>
+                <h2>Asthma Prediction</h2>
+            </div>
+            <div class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="data_exploration.html" class="menu-item active">
+                    <i class="fas fa-database"></i>
+                    <span>Data Exploration</span>
+                </a>
+                <a href="prediction.html" class="menu-item">
+                    <i class="fas fa-brain"></i>
+                    <span>Prediction</span>
+                </a>
+                <a href="visualization.html" class="menu-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Visualization</span>
+                </a>
+                <a href="login.html" class="menu-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="top-bar">
+                <div class="page-title">Data Exploration</div>
+                <div class="user-info">
+                    <img src="https://ui-avatars.com/api/?name=Aparna&background=4a6fa5&color=fff" alt="User Avatar">
+                    <span class="user-name">Aparna</span>
+                    <a href="login.html" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Data Exploration Content -->
+            <div class="page-transition active">
+                <!-- Dataset Overview -->
+                <div class="exploration-card">
+                    <div class="exploration-header">
+                        <div class="exploration-title">Dataset Overview</div>
+                        <div class="exploration-controls">
+                            <button class="exploration-control" id="refresh-data">
+                                <i class="fas fa-sync-alt"></i> Refresh
+                            </button>
+                            <button class="exploration-control" id="download-data">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-cards">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Total Records</div>
+                                <div class="card-icon">
+                                    <i class="fas fa-database"></i>
+                                </div>
+                            </div>
+                            <div class="card-value">924</div>
+                            <div class="card-description">Total number of records in the dataset</div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Features</div>
+                                <div class="card-icon">
+                                    <i class="fas fa-table"></i>
+                                </div>
+                            </div>
+                            <div class="card-value">27</div>
+                            <div class="card-description">Number of features in the dataset</div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Missing Values</div>
+                                <div class="card-icon">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                </div>
+                            </div>
+                            <div class="card-value">0</div>
+                            <div class="card-description">Number of missing values in the dataset</div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="card-title">Target Distribution</div>
+                                <div class="card-icon">
+                                    <i class="fas fa-bullseye"></i>
+                                </div>
+                            </div>
+                            <div class="card-value">60% / 40%</div>
+                            <div class="card-description">Negative / Positive diagnosis ratio</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data Sample -->
+                <div class="exploration-card">
+                    <div class="exploration-header">
+                        <div class="exploration-title">Data Sample</div>
+                        <div class="exploration-controls">
+                            <select class="exploration-control" id="rows-selector">
+                                <option value="5">5 rows</option>
+                                <option value="10" selected>10 rows</option>
+                                <option value="20">20 rows</option>
+                                <option value="50">50 rows</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="exploration-table-container">
+                        <table class="exploration-table" id="data-sample-table">
+                            <thead>
+                                <tr>
+                                    <th>PatientID</th>
+                                    <th>Age</th>
+                                    <th>Gender</th>
+                                    <th>BMI</th>
+                                    <th>Smoking</th>
+                                    <th>PhysicalActivity</th>
+                                    <th>FamilyHistoryAsthma</th>
+                                    <th>Wheezing</th>
+                                    <th>ShortnessOfBreath</th>
+                                    <th>ChestTightness</th>
+                                    <th>Diagnosis</th>
+                                </tr>
+                            </thead>
+                            <tbody id="data-sample-body">
+                                <!-- Will be populated dynamically -->
+                                <tr>
+                                    <td colspan="11" class="loading-message">Loading data sample...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Statistical Summary -->
+                <div class="exploration-card">
+                    <div class="exploration-header">
+                        <div class="exploration-title">Statistical Summary</div>
+                        <div class="exploration-controls">
+                            <button class="exploration-control" id="toggle-stats">
+                                <i class="fas fa-calculator"></i> Toggle View
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="exploration-stats">
+                        <div class="stat-card">
+                            <div class="stat-title">Average Age</div>
+                            <div class="stat-value">45.7</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-title">Average BMI</div>
+                            <div class="stat-value">27.3</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-title">Gender Ratio (M/F)</div>
+                            <div class="stat-value">48/52%</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-title">Smokers</div>
+                            <div class="stat-value">12%</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-title">Family History</div>
+                            <div class="stat-value">23%</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-title">Wheezing</div>
+                            <div class="stat-value">65%</div>
+                        </div>
+                    </div>
+                    
+                    <div class="chart-container" style="height: 300px; margin-top: 30px;">
+                        <canvas id="ageDistributionChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Feature Correlation -->
+                <div class="exploration-card">
+                    <div class="exploration-header">
+                        <div class="exploration-title">Feature Correlation with Diagnosis</div>
+                    </div>
+                    
+                    <div class="chart-container" style="height: 400px;">
+                        <canvas id="correlationChart"></canvas>
+                    </div>
+                    
+                    <div class="exploration-description">
+                        <p>This chart shows the correlation between various features and the diagnosis outcome. Higher values indicate stronger correlation with asthma diagnosis. Features with correlation above 0.3 are considered significant predictors.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to load and process the data
+        function loadExplorationData() {
+            // In a real application, you would fetch this from a server
+            // For this demo, we'll use sample data
+            
+            // Sample data for the data table
+            const sampleData = [
+                { patientId: 5034, age: 63, gender: 'Female', bmi: 15.85, smoking: 'No', physicalActivity: 0.89, familyHistory: 'Yes', wheezing: 'No', shortnessOfBreath: 'No', chestTightness: 'Yes', diagnosis: 'Negative' },
+                { patientId: 5035, age: 26, gender: 'Male', bmi: 22.76, smoking: 'No', physicalActivity: 5.90, familyHistory: 'No', wheezing: 'Yes', shortnessOfBreath: 'No', chestTightness: 'No', diagnosis: 'Negative' },
+                { patientId: 5036, age: 57, gender: 'Female', bmi: 18.40, smoking: 'No', physicalActivity: 6.74, familyHistory: 'Yes', wheezing: 'Yes', shortnessOfBreath: 'Yes', chestTightness: 'Yes', diagnosis: 'Negative' },
+                { patientId: 5037, age: 40, gender: 'Male', bmi: 38.52, smoking: 'No', physicalActivity: 1.40, familyHistory: 'No', wheezing: 'Yes', shortnessOfBreath: 'No', chestTightness: 'Yes', diagnosis: 'Negative' },
+                { patientId: 5038, age: 61, gender: 'Female', bmi: 19.28, smoking: 'No', physicalActivity: 4.60, familyHistory: 'No', wheezing: 'Yes', shortnessOfBreath: 'Yes', chestTightness: 'Yes', diagnosis: 'Negative' },
+                { patientId: 5039, age: 21, gender: 'Female', bmi: 21.81, smoking: 'No', physicalActivity: 0.47, familyHistory: 'No', wheezing: 'Yes', shortnessOfBreath: 'No', chestTightness: 'Yes', diagnosis: 'Negative' },
+                { patientId: 5040, age: 45, gender: 'Male', bmi: 30.25, smoking: 'Yes', physicalActivity: 9.37, familyHistory: 'No', wheezing: 'Yes', shortnessOfBreath: 'Yes', chestTightness: 'Yes', diagnosis: 'Negative' },
+                { patientId: 5041, age: 26, gender: 'Female', bmi: 26.05, smoking: 'Yes', physicalActivity: 8.34, familyHistory: 'No', wheezing: 'Yes', shortnessOfBreath: 'No', chestTightness: 'No', diagnosis: 'Negative' },
+                { patientId: 5042, age: 49, gender: 'Male', bmi: 32.68, smoking: 'No', physicalActivity: 2.69, familyHistory: 'No', wheezing: 'Yes', shortnessOfBreath: 'Yes', chestTightness: 'Yes', diagnosis: 'Negative' },
+                { patientId: 5043, age: 45, gender: 'Male', bmi: 29.91, smoking: 'No', physicalActivity: 2.90, familyHistory: 'No', wheezing: 'Yes', shortnessOfBreath: 'No', chestTightness: 'No', diagnosis: 'Negative' }
+            ];
+            
+            // Populate the data sample table
+            const dataSampleBody = document.getElementById('data-sample-body');
+            dataSampleBody.innerHTML = '';
+            
+            sampleData.forEach(patient => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${patient.patientId}</td>
+                    <td>${patient.age}</td>
+                    <td>${patient.gender}</td>
+                    <td>${patient.bmi.toFixed(2)}</td>
+                    <td>${patient.smoking}</td>
+                    <td>${patient.physicalActivity.toFixed(2)}</td>
+                    <td>${patient.familyHistory}</td>
+                    <td>${patient.wheezing}</td>
+                    <td>${patient.shortnessOfBreath}</td>
+                    <td>${patient.chestTightness}</td>
+                    <td><span class="status-badge ${patient.diagnosis === 'Positive' ? 'status-positive' : 'status-negative'}">${patient.diagnosis}</span></td>
+                `;
+                dataSampleBody.appendChild(row);
+            });
+            
+            // Create age distribution chart
+            const ageDistributionCtx = document.getElementById('ageDistributionChart').getContext('2d');
+            const ageDistributionChart = new Chart(ageDistributionCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['0-10', '11-20', '21-30', '31-40', '41-50', '51-60', '61-70', '71-80'],
+                    datasets: [{
+                        label: 'Age Distribution',
+                        data: [42, 68, 124, 156, 183, 165, 132, 54],
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Patients'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Age Group'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Age Distribution of Patients'
+                        }
+                    }
+                }
+            });
+            
+            // Create correlation chart
+            const correlationCtx = document.getElementById('correlationChart').getContext('2d');
+            const correlationChart = new Chart(correlationCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Wheezing', 'Shortness of Breath', 'Chest Tightness', 'Coughing', 'Family History', 'Smoking', 'BMI', 'Physical Activity', 'Sleep Quality', 'Pollution Exposure'],
+                    datasets: [{
+                        label: 'Correlation with Asthma Diagnosis',
+                        data: [0.68, 0.62, 0.57, 0.53, 0.42, 0.38, 0.31, -0.25, -0.18, 0.29],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(255, 159, 64, 0.6)',
+                            'rgba(255, 159, 64, 0.6)',
+                            'rgba(255, 159, 64, 0.6)',
+                            'rgba(75, 192, 192, 0.6)',
+                            'rgba(75, 192, 192, 0.6)',
+                            'rgba(255, 159, 64, 0.6)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            max: 0.8,
+                            title: {
+                                display: true,
+                                text: 'Correlation Coefficient'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Feature Correlation with Asthma Diagnosis'
+                        }
+                    }
+                }
+            });
+            
+            // Event listeners
+            document.getElementById('rows-selector').addEventListener('change', function(e) {
+                // In a real application, this would fetch different numbers of rows
+                console.log('Rows to display:', e.target.value);
+            });
+            
+            document.getElementById('refresh-data').addEventListener('click', function() {
+                // In a real application, this would refresh the data
+                console.log('Refreshing data...');
+            });
+            
+            document.getElementById('download-data').addEventListener('click', function() {
+                // In a real application, this would download the data
+                console.log('Downloading data...');
+                alert('Data download started. The file will be saved to your downloads folder.');
+            });
+            
+            document.getElementById('toggle-stats').addEventListener('click', function() {
+                // Toggle between different statistical views
+                console.log('Toggling statistical view...');
+            });
+        }
+        
+        // Load data when the page loads
+        window.addEventListener('DOMContentLoaded', loadExplorationData);
+    </script>
+</body>
+</html>

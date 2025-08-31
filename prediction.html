@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asthma Prediction System - Prediction</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-lungs fa-2x"></i>
+                <h2>Asthma Prediction</h2>
+            </div>
+            <div class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="data_exploration.html" class="menu-item">
+                    <i class="fas fa-database"></i>
+                    <span>Data Exploration</span>
+                </a>
+                <a href="prediction.html" class="menu-item active">
+                    <i class="fas fa-brain"></i>
+                    <span>Prediction</span>
+                </a>
+                <a href="visualization.html" class="menu-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Visualization</span>
+                </a>
+                <a href="login.html" class="menu-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="top-bar">
+                <div class="page-title">Asthma Prediction</div>
+                <div class="user-info">
+                    <img src="https://ui-avatars.com/api/?name=Aparna&background=4a6fa5&color=fff" alt="User Avatar">
+                    <span class="user-name">Aparna</span>
+                    <a href="login.html" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Prediction Content -->
+            <div class="page-transition active">
+                <!-- Model Selection -->
+                <div class="card" style="margin-bottom: 30px;">
+                    <div class="card-header">
+                        <div class="card-title">Select Prediction Model</div>
+                    </div>
+                    <div style="display: flex; gap: 20px; margin-top: 20px;">
+                        <div class="model-option" data-model="rf" style="flex: 1; padding: 15px; border: 2px solid #4a6fa5; border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.3s;">
+                            <i class="fas fa-tree" style="font-size: 24px; color: #4a6fa5; margin-bottom: 10px;"></i>
+                            <h3>Random Forest</h3>
+                            <p>Accuracy: 87.2%</p>
+                        </div>
+                        <div class="model-option" data-model="svm" style="flex: 1; padding: 15px; border: 2px solid #ddd; border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.3s;">
+                            <i class="fas fa-vector-square" style="font-size: 24px; color: #6c757d; margin-bottom: 10px;"></i>
+                            <h3>Support Vector Machine</h3>
+                            <p>Accuracy: 83.5%</p>
+                        </div>
+                        <div class="model-option" data-model="knn" style="flex: 1; padding: 15px; border: 2px solid #ddd; border-radius: 8px; text-align: center; cursor: pointer; transition: all 0.3s;">
+                            <i class="fas fa-project-diagram" style="font-size: 24px; color: #6c757d; margin-bottom: 10px;"></i>
+                            <h3>K-Nearest Neighbors</h3>
+                            <p>Accuracy: 79.1%</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prediction Form and Results -->
+                <div class="prediction-container">
+                    <div class="prediction-form-card">
+                        <h2 class="prediction-form-title">Patient Information</h2>
+                        <div style="text-align: right; margin-bottom: 15px;">
+                            <button id="load-sample-data" class="table-action-btn" type="button">
+                                <i class="fas fa-database"></i> Load Sample Data
+                            </button>
+                        </div>
+                        <form id="prediction-form" class="prediction-form">
+                            <div class="prediction-form-group">
+                                <label for="age">Age</label>
+                                <input type="number" id="age" name="age" min="1" max="100" required>
+                            </div>
+                            <div class="prediction-form-group">
+                                <label for="gender">Gender</label>
+                                <select id="gender" name="gender" required>
+                                    <option value="">Select</option>
+                                    <option value="0">Female</option>
+                                    <option value="1">Male</option>
+                                </select>
+                            </div>
+                            <div class="prediction-form-group">
+                                <label for="bmi">BMI</label>
+                                <input type="number" id="bmi" name="bmi" min="10" max="50" step="0.1" required>
+                            </div>
+                            <div class="prediction-form-group">
+                                <label for="smoking">Smoking</label>
+                                <select id="smoking" name="smoking" required>
+                                    <option value="">Select</option>
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                            <div class="prediction-form-group">
+                                <label for="physical_activity">Physical Activity (0-10)</label>
+                                <input type="number" id="physical_activity" name="physical_activity" min="0" max="10" step="0.1" required>
+                            </div>
+                            <div class="prediction-form-group">
+                                <label for="family_history">Family History of Asthma</label>
+                                <select id="family_history" name="family_history" required>
+                                    <option value="">Select</option>
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                            <div class="prediction-form-group">
+                                <label for="wheezing">Wheezing</label>
+                                <select id="wheezing" name="wheezing" required>
+                                    <option value="">Select</option>
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                            <div class="prediction-form-group">
+                                <label for="shortness_of_breath">Shortness of Breath</label>
+                                <select id="shortness_of_breath" name="shortness_of_breath" required>
+                                    <option value="">Select</option>
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                            <div class="prediction-form-group">
+                                <label for="chest_tightness">Chest Tightness</label>
+                                <select id="chest_tightness" name="chest_tightness" required>
+                                    <option value="">Select</option>
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                            <div class="prediction-form-group">
+                                <label for="coughing">Coughing</label>
+                                <select id="coughing" name="coughing" required>
+                                    <option value="">Select</option>
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                            <div class="prediction-form-group">
+                                <label for="nighttime_symptoms">Nighttime Symptoms</label>
+                                <select id="nighttime_symptoms" name="nighttime_symptoms" required>
+                                    <option value="">Select</option>
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                            <div class="prediction-form-group">
+                                <label for="exercise_induced">Exercise Induced Symptoms</label>
+                                <select id="exercise_induced" name="exercise_induced" required>
+                                    <option value="">Select</option>
+                                    <option value="0">No</option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="prediction-btn">
+                                <i class="fas fa-brain"></i> Predict Asthma Risk
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="prediction-result-card">
+                        <h2 class="prediction-result-title">Prediction Results</h2>
+                        <div id="prediction-loading" style="display: none; text-align: center; padding: 50px 0;">
+                            <div class="loading-spinner" style="margin: 0 auto;"></div>
+                            <p style="margin-top: 20px;">Processing prediction...</p>
+                        </div>
+                        <div id="prediction-placeholder" style="text-align: center; padding: 50px 0;">
+                            <i class="fas fa-chart-line" style="font-size: 64px; color: #ddd; margin-bottom: 20px;"></i>
+                            <p>Fill in the patient information and click "Predict" to see results</p>
+                        </div>
+                        <div id="prediction-results" style="display: none;">
+                            <div class="prediction-result">
+                                <div class="prediction-score" id="prediction-probability">87%</div>
+                                <div class="prediction-label" id="prediction-label">Asthma Risk: High</div>
+                                <div style="display: flex; justify-content: center; gap: 10px;">
+                                    <span class="status-badge status-negative" id="prediction-badge">Positive</span>
+                                </div>
+                            </div>
+                            
+                            <div class="prediction-details">
+                                <h3 style="margin-bottom: 15px;">Key Factors</h3>
+                                <div class="prediction-detail-item">
+                                    <div class="prediction-detail-label">Wheezing</div>
+                                    <div class="prediction-detail-value">High Impact</div>
+                                </div>
+                                <div class="prediction-detail-item">
+                                    <div class="prediction-detail-label">Shortness of Breath</div>
+                                    <div class="prediction-detail-value">High Impact</div>
+                                </div>
+                                <div class="prediction-detail-item">
+                                    <div class="prediction-detail-label">Family History</div>
+                                    <div class="prediction-detail-value">Medium Impact</div>
+                                </div>
+                                <div class="prediction-detail-item">
+                                    <div class="prediction-detail-label">BMI</div>
+                                    <div class="prediction-detail-value">Low Impact</div>
+                                </div>
+                            </div>
+                            
+                            <div class="prediction-model-info">
+                                <div class="prediction-model-title">Model: <span id="model-used">Random Forest</span></div>
+                                <div class="prediction-model-description">
+                                    Random Forest is an ensemble learning method that operates by constructing multiple decision trees during training and outputting the class that is the mode of the classes of the individual trees.
+                                </div>
+                            </div>
+                            
+                            <div style="margin-top: 20px; text-align: center;">
+                                <button id="download-report" class="table-action-btn">
+                                    <i class="fas fa-file-pdf"></i> Download Report
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Feature Importance Chart -->
+                <div class="chart-card" style="margin-top: 30px; display: none;" id="feature-importance-container">
+                    <div class="chart-header">
+                        <div class="chart-title">Feature Importance</div>
+                        <div class="chart-actions">
+                            <button class="chart-action-btn">
+                                <i class="fas fa-download"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="featureImportanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample patient data
+        const samplePatients = [
+            {
+                name: "John Smith",
+                age: 45,
+                gender: "1", // Male
+                bmi: 28.5,
+                smoking: "1", // Yes
+                physical_activity: 3.5,
+                family_history: "1", // Yes
+                wheezing: "1", // Yes
+                shortness_of_breath: "1", // Yes
+                chest_tightness: "1", // Yes
+                coughing: "1", // Yes
+                nighttime_symptoms: "1", // Yes
+                exercise_induced: "1" // Yes
+            },
+            {
+                name: "Sarah Johnson",
+                age: 32,
+                gender: "0", // Female
+                bmi: 22.1,
+                smoking: "0", // No
+                physical_activity: 7.5,
+                family_history: "0", // No
+                wheezing: "0", // No
+                shortness_of_breath: "0", // No
+                chest_tightness: "0", // No
+                coughing: "1", // Yes
+                nighttime_symptoms: "0", // No
+                exercise_induced: "0" // No
+            },
+            {
+                name: "Michael Chen",
+                age: 12,
+                gender: "1", // Male
+                bmi: 19.8,
+                smoking: "0", // No
+                physical_activity: 6.0,
+                family_history: "1", // Yes
+                wheezing: "1", // Yes
+                shortness_of_breath: "0", // No
+                chest_tightness: "0", // No
+                coughing: "1", // Yes
+                nighttime_symptoms: "1", // Yes
+                exercise_induced: "1" // Yes
+            }
+        ];
+
+        // Current chart instance
+        let currentChart = null;
+        
+        // Model selection
+        const modelOptions = document.querySelectorAll('.model-option');
+        let selectedModel = 'rf'; // Default model
+        
+        modelOptions.forEach(option => {
+            option.addEventListener('click', function() {
+                // Reset all options
+                modelOptions.forEach(opt => {
+                    opt.style.borderColor = '#ddd';
+                    opt.querySelector('i').style.color = '#6c757d';
+                });
+                
+                // Set selected option
+                this.style.borderColor = '#4a6fa5';
+                this.querySelector('i').style.color = '#4a6fa5';
+                
+                // Update selected model
+                selectedModel = this.dataset.model;
+                
+                // Update model info in results
+                const modelNames = {
+                    'rf': 'Random Forest',
+                    'svm': 'Support Vector Machine',
+                    'knn': 'K-Nearest Neighbors'
+                };
+                
+                const modelDescriptions = {
+                    'rf': 'Random Forest is an ensemble learning method that operates by constructing multiple decision trees during training and outputting the class that is the mode of the classes of the individual trees.',
+                    'svm': 'Support Vector Machine is a supervised learning model that analyzes data for classification and regression analysis. It works by finding the hyperplane that best divides a dataset into classes.',
+                    'knn': 'K-Nearest Neighbors is a non-parametric method used for classification and regression. The output is determined by the majority class among the k-nearest neighbors.'
+                };
+                
+                document.getElementById('model-used').textContent = modelNames[selectedModel];
+                document.querySelector('.prediction-model-description').textContent = modelDescriptions[selectedModel];
+                
+                // If results are already showing, update the chart
+                if (document.getElementById('prediction-results').style.display !== 'none') {
+                    createFeatureImportanceChart();
+                }
+            });
+        });
+        
+        // Load sample data button
+        document.getElementById('load-sample-data').addEventListener('click', function() {
+            // Randomly select a sample patient
+            const randomIndex = Math.floor(Math.random() * samplePatients.length);
+            const patient = samplePatients[randomIndex];
+            
+            // Fill the form with sample data
+            document.getElementById('age').value = patient.age;
+            document.getElementById('gender').value = patient.gender;
+            document.getElementById('bmi').value = patient.bmi;
+            document.getElementById('smoking').value = patient.smoking;
+            document.getElementById('physical_activity').value = patient.physical_activity;
+            document.getElementById('family_history').value = patient.family_history;
+            document.getElementById('wheezing').value = patient.wheezing;
+            document.getElementById('shortness_of_breath').value = patient.shortness_of_breath;
+            document.getElementById('chest_tightness').value = patient.chest_tightness;
+            document.getElementById('coughing').value = patient.coughing;
+            document.getElementById('nighttime_symptoms').value = patient.nighttime_symptoms;
+            document.getElementById('exercise_induced').value = patient.exercise_induced;
+            
+            // Show a notification
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `<i class="fas fa-info-circle"></i> Loaded sample data for patient: ${patient.name}`;
+            notification.style.position = 'fixed';
+            notification.style.bottom = '20px';
+            notification.style.right = '20px';
+            notification.style.backgroundColor = '#4a6fa5';
+            notification.style.color = 'white';
+            notification.style.padding = '10px 20px';
+            notification.style.borderRadius = '5px';
+            notification.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+            notification.style.zIndex = '1000';
+            document.body.appendChild(notification);
+            
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.5s';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 500);
+            }, 3000);
+        });
+        
+        // Prediction form submission
+        document.getElementById('prediction-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Show loading
+            document.getElementById('prediction-placeholder').style.display = 'none';
+            document.getElementById('prediction-loading').style.display = 'block';
+            document.getElementById('prediction-results').style.display = 'none';
+            
+            // Simulate prediction (in a real app, this would be an API call)
+            setTimeout(() => {
+                // Hide loading
+                document.getElementById('prediction-loading').style.display = 'none';
+                document.getElementById('prediction-results').style.display = 'block';
+                
+                // Show feature importance chart
+                document.getElementById('feature-importance-container').style.display = 'block';
+                
+                // Get form values
+                const age = parseInt(document.getElementById('age').value);
+                const bmi = parseFloat(document.getElementById('bmi').value);
+                const smoking = document.getElementById('smoking').value === '1';
+                const physicalActivity = parseFloat(document.getElementById('physical_activity').value);
+                const wheezing = document.getElementById('wheezing').value === '1';
+                const shortnessOfBreath = document.getElementById('shortness_of_breath').value === '1';
+                const chestTightness = document.getElementById('chest_tightness').value === '1';
+                const coughing = document.getElementById('coughing').value === '1';
+                const nighttimeSymptoms = document.getElementById('nighttime_symptoms').value === '1';
+                const exerciseInduced = document.getElementById('exercise_induced').value === '1';
+                const familyHistory = document.getElementById('family_history').value === '1';
+                
+                // Calculate a simple risk score based on inputs (this is just a demo)
+                let riskScore = 0;
+                
+                // Primary symptoms
+                if (wheezing) riskScore += 25;
+                if (shortnessOfBreath) riskScore += 20;
+                if (chestTightness) riskScore += 15;
+                if (coughing) riskScore += 10;
+                
+                // Secondary factors
+                if (nighttimeSymptoms) riskScore += 8;
+                if (exerciseInduced) riskScore += 7;
+                if (familyHistory) riskScore += 15;
+                
+                // Lifestyle factors
+                if (smoking) riskScore += 5;
+                if (physicalActivity < 3) riskScore += 5;
+                if (bmi > 30 || bmi < 18.5) riskScore += 5;
+                
+                // Age factor
+                if (age < 12 || age > 65) riskScore += 10;
+                
+                // Adjust based on selected model (just for demo purposes)
+                if (selectedModel === 'svm') riskScore = Math.max(0, Math.min(100, riskScore - 5));
+                if (selectedModel === 'knn') riskScore = Math.max(0, Math.min(100, riskScore - 10));
+                
+                // Update prediction results
+                document.getElementById('prediction-probability').textContent = `${riskScore}%`;
+                
+                let riskLevel = 'Low';
+                if (riskScore >= 70) riskLevel = 'High';
+                else if (riskScore >= 40) riskLevel = 'Medium';
+                
+                document.getElementById('prediction-label').textContent = `Asthma Risk: ${riskLevel}`;
+                
+                const predictionBadge = document.getElementById('prediction-badge');
+                if (riskScore >= 50) {
+                    predictionBadge.textContent = 'Positive';
+                    predictionBadge.className = 'status-badge status-negative';
+                } else {
+                    predictionBadge.textContent = 'Negative';
+                    predictionBadge.className = 'status-badge status-positive';
+                }
+                
+                // Update key factors based on inputs
+                const keyFactors = [];
+                
+                if (wheezing) keyFactors.push({ label: 'Wheezing', impact: 'High Impact' });
+                if (shortnessOfBreath) keyFactors.push({ label: 'Shortness of Breath', impact: 'High Impact' });
+                if (chestTightness) keyFactors.push({ label: 'Chest Tightness', impact: 'High Impact' });
+                if (familyHistory) keyFactors.push({ label: 'Family History', impact: 'Medium Impact' });
+                if (nighttimeSymptoms) keyFactors.push({ label: 'Nighttime Symptoms', impact: 'Medium Impact' });
+                if (exerciseInduced) keyFactors.push({ label: 'Exercise Induced', impact: 'Medium Impact' });
+                if (smoking) keyFactors.push({ label: 'Smoking', impact: 'Low Impact' });
+                if (bmi > 30) keyFactors.push({ label: 'BMI (Overweight)', impact: 'Low Impact' });
+                
+                // Sort by impact
+                keyFactors.sort((a, b) => {
+                    const impactOrder = { 'High Impact': 0, 'Medium Impact': 1, 'Low Impact': 2 };
+                    return impactOrder[a.impact] - impactOrder[b.impact];
+                });
+                
+                // Take top 4 factors
+                const topFactors = keyFactors.slice(0, 4);
+                
+                // Update UI with key factors
+                const detailsContainer = document.querySelector('.prediction-details');
+                const detailItems = detailsContainer.querySelectorAll('.prediction-detail-item');
+                
+                // Clear existing items
+                detailItems.forEach(item => item.remove());
+                
+                // Add title
+                const title = document.createElement('h3');
+                title.style.marginBottom = '15px';
+                title.textContent = 'Key Factors';
+                detailsContainer.appendChild(title);
+                
+                // Add new items
+                topFactors.forEach(factor => {
+                    const item = document.createElement('div');
+                    item.className = 'prediction-detail-item';
+                    
+                    const label = document.createElement('div');
+                    label.className = 'prediction-detail-label';
+                    label.textContent = factor.label;
+                    
+                    const value = document.createElement('div');
+                    value.className = 'prediction-detail-value';
+                    value.textContent = factor.impact;
+                    
+                    item.appendChild(label);
+                    item.appendChild(value);
+                    detailsContainer.appendChild(item);
+                });
+                
+                // Create feature importance chart
+                createFeatureImportanceChart();
+            }, 1500);
+        });
+        
+        // Feature importance chart
+        function createFeatureImportanceChart() {
+            const ctx = document.getElementById('featureImportanceChart').getContext('2d');
+            
+            // Destroy previous chart if it exists
+            if (currentChart) {
+                currentChart.destroy();
+            }
+            
+            // Different feature importance based on selected model (for demo)
+            let featureImportance;
+            
+            if (selectedModel === 'rf') {
+                featureImportance = {
+                    labels: ['Wheezing', 'Shortness of Breath', 'Chest Tightness', 'Coughing', 'Family History', 'Nighttime Symptoms', 'Exercise Induced', 'BMI', 'Age', 'Smoking'],
+                    values: [0.23, 0.18, 0.15, 0.12, 0.09, 0.08, 0.06, 0.04, 0.03, 0.02]
+                };
+            } else if (selectedModel === 'svm') {
+                featureImportance = {
+                    labels: ['Wheezing', 'Shortness of Breath', 'Chest Tightness', 'Family History', 'Coughing', 'Nighttime Symptoms', 'Exercise Induced', 'Age', 'BMI', 'Smoking'],
+                    values: [0.21, 0.19, 0.16, 0.11, 0.10, 0.07, 0.06, 0.05, 0.03, 0.02]
+                };
+            } else {
+                featureImportance = {
+                    labels: ['Wheezing', 'Chest Tightness', 'Shortness of Breath', 'Coughing', 'Family History', 'Exercise Induced', 'Nighttime Symptoms', 'BMI', 'Smoking', 'Age'],
+                    values: [0.22, 0.20, 0.17, 0.13, 0.08, 0.07, 0.05, 0.04, 0.03, 0.01]
+                };
+            }
+            
+            // Create chart
+            currentChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: featureImportance.labels,
+                    datasets: [{
+                        label: 'Feature Importance',
+                        data: featureImportance.values,
+                        backgroundColor: 'rgba(75, 192, 192, 0.6)',
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Feature Importance for Asthma Prediction'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return `Importance: ${(context.raw * 100).toFixed(1)}%`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Importance'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return (value * 100).toFixed(0) + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Download report button
+        document.getElementById('download-report').addEventListener('click', function() {
+            // Get patient information
+            const age = document.getElementById('age').value;
+            const gender = document.getElementById('gender').value === '1' ? 'Male' : 'Female';
+            const riskScore = document.getElementById('prediction-probability').textContent;
+            const riskLevel = document.getElementById('prediction-label').textContent.split(': ')[1];
+            const modelUsed = document.getElementById('model-used').textContent;
+            
+            // Create a notification with more details
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <i class="fas fa-file-pdf"></i> 
+                <div>
+                    <strong>Report Downloaded</strong>
+                    <p>Patient: ${age} year old ${gender}</p>
+                    <p>Risk: ${riskScore} (${riskLevel})</p>
+                    <p>Model: ${modelUsed}</p>
+                </div>
+            `;
+            notification.style.position = 'fixed';
+            notification.style.bottom = '20px';
+            notification.style.right = '20px';
+            notification.style.backgroundColor = '#4a6fa5';
+            notification.style.color = 'white';
+            notification.style.padding = '15px 20px';
+            notification.style.borderRadius = '5px';
+            notification.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+            notification.style.zIndex = '1000';
+            notification.style.display = 'flex';
+            notification.style.alignItems = 'flex-start';
+            notification.style.gap = '15px';
+            document.body.appendChild(notification);
+            
+            // Remove notification after 4 seconds
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.5s';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 500);
+            }, 4000);
+        });
+        
+        // Chart download button
+        document.querySelector('.chart-actions .chart-action-btn').addEventListener('click', function() {
+            if (!currentChart) return;
+            
+            // Get the canvas element
+            const canvas = document.getElementById('featureImportanceChart');
+            
+            // Create a link element
+            const link = document.createElement('a');
+            link.download = `asthma_feature_importance_${selectedModel}.png`;
+            
+            // Convert canvas to data URL
+            link.href = canvas.toDataURL('image/png');
+            
+            // Trigger download
+            link.click();
+            
+            // Show notification
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `<i class="fas fa-check-circle"></i> Chart image downloaded successfully`;
+            notification.style.position = 'fixed';
+            notification.style.bottom = '20px';
+            notification.style.right = '20px';
+            notification.style.backgroundColor = '#4a6fa5';
+            notification.style.color = 'white';
+            notification.style.padding = '10px 20px';
+            notification.style.borderRadius = '5px';
+            notification.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+            notification.style.zIndex = '1000';
+            document.body.appendChild(notification);
+            
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transition = 'opacity 0.5s';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 500);
+            }, 3000);
+        });
+    </script>
+</body>
+</html>

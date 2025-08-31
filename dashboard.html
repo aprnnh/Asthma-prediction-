@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Asthma Prediction System - Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-lungs fa-2x"></i>
+                <h2>Asthma Prediction</h2>
+            </div>
+            <div class="sidebar-menu">
+                <a href="dashboard.html" class="menu-item active">
+                    <i class="fas fa-home"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="data_exploration.html" class="menu-item">
+                    <i class="fas fa-database"></i>
+                    <span>Data Exploration</span>
+                </a>
+                <a href="prediction.html" class="menu-item">
+                    <i class="fas fa-brain"></i>
+                    <span>Prediction</span>
+                </a>
+                <a href="visualization.html" class="menu-item">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Visualization</span>
+                </a>
+                <a href="login.html" class="menu-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="top-bar">
+                <div class="page-title">Dashboard</div>
+                <div class="user-info">
+                    <img src="https://ui-avatars.com/api/?name=Aparna&background=4a6fa5&color=fff" alt="User Avatar">
+                    <span class="user-name">Aparna</span>
+                    <a href="login.html" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div class="page-transition active">
+                <!-- Summary Cards -->
+                <div class="dashboard-cards">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Total Patients</div>
+                            <div class="card-icon">
+                                <i class="fas fa-users"></i>
+                            </div>
+                        </div>
+                        <div class="card-value">924</div>
+                        <div class="card-description">Total number of patients in the dataset</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Asthma Positive</div>
+                            <div class="card-icon">
+                                <i class="fas fa-lungs"></i>
+                            </div>
+                        </div>
+                        <div class="card-value" id="asthma-positive">Loading...</div>
+                        <div class="card-description">Patients diagnosed with asthma</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Best Model</div>
+                            <div class="card-icon">
+                                <i class="fas fa-award"></i>
+                            </div>
+                        </div>
+                        <div class="card-value" id="best-model">Loading...</div>
+                        <div class="card-description">Highest performing prediction model</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="card-title">Accuracy</div>
+                            <div class="card-icon">
+                                <i class="fas fa-bullseye"></i>
+                            </div>
+                        </div>
+                        <div class="card-value" id="best-accuracy">Loading...</div>
+                        <div class="card-description">Accuracy of the best model</div>
+                    </div>
+                </div>
+
+                <!-- Charts -->
+                <div class="charts-container">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">Model Performance Comparison</div>
+                            <div class="chart-actions">
+                                <button class="chart-action-btn">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="chart-action-btn">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="modelComparisonChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <div class="chart-title">Diagnosis Distribution</div>
+                            <div class="chart-actions">
+                                <button class="chart-action-btn">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                                <button class="chart-action-btn">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="diagnosisDistributionChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Patients Table -->
+                <div class="data-table-container">
+                    <div class="table-header">
+                        <div class="table-title">Recent Patient Data</div>
+                        <div class="table-actions">
+                            <button class="table-action-btn">
+                                <i class="fas fa-download"></i> Export
+                            </button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Patient ID</th>
+                                    <th>Age</th>
+                                    <th>Gender</th>
+                                    <th>BMI</th>
+                                    <th>Symptoms</th>
+                                    <th>Diagnosis</th>
+                                </tr>
+                            </thead>
+                            <tbody id="patient-table-body">
+                                <!-- Table rows will be populated dynamically -->
+                                <tr>
+                                    <td colspan="6" class="loading-message">Loading patient data...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to load and process the CSV data
+        async function loadData() {
+            try {
+                // In a real application, you would fetch this from a server
+                // For this demo, we'll simulate loading the data
+                
+                // Simulate asthma positive count (approximately 40% of total)
+                const totalPatients = 924;
+                const asthmaPositive = Math.round(totalPatients * 0.4);
+                document.getElementById('asthma-positive').textContent = asthmaPositive;
+                
+                // Set best model and accuracy
+                document.getElementById('best-model').textContent = 'Random Forest';
+                document.getElementById('best-accuracy').textContent = '87.2%';
+                
+                // Create model comparison chart
+                const modelComparisonCtx = document.getElementById('modelComparisonChart').getContext('2d');
+                const modelComparisonChart = new Chart(modelComparisonCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Random Forest', 'SVM', 'KNN'],
+                        datasets: [{
+                            label: 'Accuracy',
+                            data: [0.872, 0.835, 0.791],
+                            backgroundColor: [
+                                'rgba(75, 192, 192, 0.6)',
+                                'rgba(54, 162, 235, 0.6)',
+                                'rgba(153, 102, 255, 0.6)'
+                            ],
+                            borderColor: [
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(153, 102, 255, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 1,
+                                ticks: {
+                                    callback: function(value) {
+                                        return (value * 100).toFixed(0) + '%';
+                                    }
+                                }
+                            }
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return 'Accuracy: ' + (context.raw * 100).toFixed(1) + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                
+                // Create diagnosis distribution chart
+                const diagnosisDistributionCtx = document.getElementById('diagnosisDistributionChart').getContext('2d');
+                const diagnosisDistributionChart = new Chart(diagnosisDistributionCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Asthma Negative', 'Asthma Positive'],
+                        datasets: [{
+                            data: [totalPatients - asthmaPositive, asthmaPositive],
+                            backgroundColor: [
+                                'rgba(54, 162, 235, 0.6)',
+                                'rgba(255, 99, 132, 0.6)'
+                            ],
+                            borderColor: [
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 99, 132, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const value = context.raw;
+                                        const percentage = ((value / totalPatients) * 100).toFixed(1);
+                                        return `${context.label}: ${value} (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+                
+                // Populate patient table with sample data
+                const patientTableBody = document.getElementById('patient-table-body');
+                patientTableBody.innerHTML = '';
+                
+                // Sample patient data
+                const samplePatients = [
+                    { id: 5034, age: 63, gender: 'Female', bmi: 15.85, symptoms: 'Chest Tightness, Exercise Induced', diagnosis: 'Negative' },
+                    { id: 5035, age: 26, gender: 'Male', bmi: 22.76, symptoms: 'Wheezing, Coughing, Nighttime Symptoms', diagnosis: 'Negative' },
+                    { id: 5036, age: 57, gender: 'Female', bmi: 18.40, symptoms: 'Wheezing, Shortness of Breath, Chest Tightness', diagnosis: 'Negative' },
+                    { id: 5037, age: 40, gender: 'Male', bmi: 38.52, symptoms: 'Wheezing, Chest Tightness, Coughing', diagnosis: 'Negative' },
+                    { id: 5038, age: 61, gender: 'Female', bmi: 19.28, symptoms: 'Wheezing, Shortness of Breath, Chest Tightness', diagnosis: 'Negative' }
+                ];
+                
+                samplePatients.forEach(patient => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${patient.id}</td>
+                        <td>${patient.age}</td>
+                        <td>${patient.gender}</td>
+                        <td>${patient.bmi.toFixed(2)}</td>
+                        <td>${patient.symptoms}</td>
+                        <td><span class="status-badge ${patient.diagnosis === 'Positive' ? 'status-positive' : 'status-negative'}">${patient.diagnosis}</span></td>
+                    `;
+                    patientTableBody.appendChild(row);
+                });
+                
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+        
+        // Load data when the page loads
+        window.addEventListener('DOMContentLoaded', loadData);
+    </script>
+</body>
+</html>
